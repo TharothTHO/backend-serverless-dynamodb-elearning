@@ -1,0 +1,74 @@
+service: learn-serverless
+
+plugins:
+  - serverless-bundle
+  - serverless-pseudo-parameters
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  memorySize: 256
+  stage: ${opt:stage, 'dev'}
+  region: us-east-1
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource:
+        - arn:aws:dynamodb:#{AWS::Region}:#{AWS::AccountId}:table/ElearningTable
+  
+resources:
+  Resources:
+    ElearningTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ElearningTable
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+
+functions:
+  createLesson:
+    handler: src/handlers/createLesson.handler
+    events:
+      - http:
+          method: POST
+          path: /create
+
+  getLessons:
+    handler: src/handlers/getLessons.handler
+    events:
+      - http:
+          method: GET
+          path: /lessons
+
+  getLesson:
+    handler: src/handlers/getLesson.handler
+    events:
+      - http:
+          method: GET
+          path: /lessons/{id}
+
+  updateLesson:
+    handler: src/handlers/updateLesson.handler
+    events:
+      - http:
+          method: PATCH
+          path: /lessons/{id}
+
+  deleteLesson:
+    handler: src/handlers/deleteLesson.handler
+    events:
+      - http:
+          method: DELETE
+          path: /lessons/{id}
+          

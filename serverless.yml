@@ -11,31 +11,11 @@ provider:
   stage: ${opt:stage, 'dev'}
   region: us-east-1
   iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - dynamodb:Query
-        - dynamodb:Scan
-        - dynamodb:GetItem
-        - dynamodb:PutItem
-        - dynamodb:UpdateItem
-        - dynamodb:DeleteItem
-      Resource:
-        - arn:aws:dynamodb:#{AWS::Region}:#{AWS::AccountId}:table/ElearningTable
+    - ${file(iam/ElearningTableIAM.yml):ElearningTableIAM}
   
 resources:
   Resources:
-    ElearningTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: ElearningTable
-        BillingMode: PAY_PER_REQUEST
-        AttributeDefinitions:
-          - AttributeName: id
-            AttributeType: S
-        KeySchema:
-          - AttributeName: id
-            KeyType: HASH
-
+    ElearningTable: ${file(resources/ElearningTable.yml):ElearningTable}
 functions:
   createLesson:
     handler: src/handlers/createLesson.handler

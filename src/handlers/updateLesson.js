@@ -9,7 +9,7 @@ async function updateLesson(event, context) {
   const { description } = JSON.parse(event.body);
 
   const params = {
-    TableName: "ElearningTable",
+    TableName: process.env.LESSONS_TABLE_NAME,
     Key: { id },
     UpdateExpression: "set title = :title, description = :description",
     ExpressionAttributeValues: { ":title": title, ":description": description },

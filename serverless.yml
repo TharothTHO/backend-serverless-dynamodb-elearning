@@ -10,12 +10,19 @@ provider:
   memorySize: 256
   stage: ${opt:stage, 'dev'}
   region: us-east-1
+  environment:
+    LESSONS_TABLE_NAME: ${self:custom.ElearningTable.name}
+    LESSONS_BUCKET_NAME: ${self:custom.LessonsBucket.name}
   iamRoleStatements:
     - ${file(iam/ElearningTableIAM.yml):ElearningTableIAM}
+    - ${file(iam/LessonsBucketIAM.yml):LessonsBucketIAM}
   
 resources:
   Resources:
     ElearningTable: ${file(resources/ElearningTable.yml):ElearningTable}
+    LessonsBucket: ${file(resources/LessonsBucket.yml):LessonsBucket}
+    LessonsBucketPolicy: ${file(resources/LessonsBucket.yml):LessonsBucketPolicy}
+
 functions:
   createLesson:
     handler: src/handlers/createLesson.handler
@@ -51,4 +58,18 @@ functions:
       - http:
           method: DELETE
           path: /lessons/{id}
+
+  uploadLessonPicture:
+    handler: src/handlers/uploadLessonPicture.handler
+    events:
+      - http:
+          method: PATCH
+          path: /lessons/{id}/picture
+
+custom:
+  ElearningTable:
+    name: !Ref ElearningTable
+    arn: !GetAtt ElearningTable.Arn
+  LessonsBucket:
+    name: lessons-bucket-ninjadev-${self:provider.stage}
           

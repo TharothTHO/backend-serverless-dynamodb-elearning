@@ -20,7 +20,7 @@ async function createLesson(event, context) {
   try {
     await dynamodb
       .put({
-        TableName: "ElearningTable",
+        TableName: process.env.LESSONS_TABLE_NAME,
         Item: Lesson,
       })
       .promise();

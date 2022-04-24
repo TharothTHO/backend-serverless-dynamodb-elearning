@@ -1,7 +1,7 @@
 ElearningTable:
   Type: AWS::DynamoDB::Table
   Properties:
-    TableName: ElearningTable
+    TableName: ElearningTable-${self:provider.stage}
     BillingMode: PAY_PER_REQUEST
     AttributeDefinitions:
       - AttributeName: id

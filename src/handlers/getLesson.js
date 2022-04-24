@@ -9,7 +9,7 @@ async function getLesson(event, context) {
 
   try {
     const result = await dynamodb
-      .get({ TableName: "ElearningTable", Key: { id } })
+      .get({ TableName: process.env.LESSONS_TABLE_NAME, Key: { id } })
       .promise();
     lesson = result.Item;
   } catch (error) {

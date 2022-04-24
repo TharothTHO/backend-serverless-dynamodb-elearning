@@ -8,4 +8,4 @@ ElearningTableIAM:
     - dynamodb:UpdateItem
     - dynamodb:DeleteItem
   Resource:
-    - arn:aws:dynamodb:#{AWS::Region}:#{AWS::AccountId}:table/ElearningTable
+    - ${self:custom.ElearningTable.arn}

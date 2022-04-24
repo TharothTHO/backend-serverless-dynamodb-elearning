@@ -8,7 +8,7 @@ async function getLessons(event, context) {
 
   try {
     const result = await dynamodb
-      .scan({ TableName: "ElearningTable" })
+      .scan({ TableName: process.env.LESSONS_TABLE_NAME })
       .promise();
     lessons = result.Items;
   } catch (error) {

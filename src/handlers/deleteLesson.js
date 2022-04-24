@@ -8,7 +8,7 @@ async function getLesson(event, context) {
 
   try {
     await dynamodb
-      .delete({ TableName: "ElearningTable", Key: { id } })
+      .delete({ TableName: process.env.LESSONS_TABLE_NAME, Key: { id } })
       .promise();
   } catch (error) {
     throw new createError.BadRequest(`Error "${error}"`);

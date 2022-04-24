@@ -1,0 +1,22 @@
+LessonsBucket:
+  Type: AWS::S3::Bucket
+  Properties:
+    BucketName: ${self:custom.LessonsBucket.name}
+    LifecycleConfiguration:
+      Rules:
+        - Id: ExpirePictures
+          Status: Enabled
+          ExpirationInDays: 1
+
+LessonsBucketPolicy:
+  Type: AWS::S3::BucketPolicy
+  Properties:
+    Bucket: !Ref LessonsBucket
+    PolicyDocument:
+      Statement:
+        - Sid: PublicRead
+          Effect: Allow
+          Principal: '*'
+          Action:
+            - s3:GetObject
+          Resource: arn:aws:s3:::${self:custom.LessonsBucket.name}/*

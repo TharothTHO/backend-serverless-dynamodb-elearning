@@ -1,11 +1,11 @@
 import AWS from "aws-sdk";
+import commonMiddleware from '../lib/commonMiddleware';
 import createError from "http-errors";
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
-async function getLesson(event, context) {
+export async function getLessonById(id) {
   let lesson;
-  const { id } = event.pathParameters;
 
   try {
     const result = await dynamodb
@@ -20,10 +20,16 @@ async function getLesson(event, context) {
   if (!lesson) {
     throw new createError.NotFound(`Lesson with ID "${id}" not found!`);
   }
+  return lesson;
+}
+
+async function getLesson(event, context) {
+  const { id } = event.pathParameters;
+  const lesson = await getLessonById(id);
 
   return {
     statusCode: 200,
     body: JSON.stringify(lesson),
   };
 }
-export const handler = getLesson;
+export const handler = commonMiddleware(getLesson);

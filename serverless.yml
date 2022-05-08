@@ -71,5 +71,5 @@ custom:
     name: !Ref ElearningTable
     arn: !GetAtt ElearningTable.Arn
   LessonsBucket:
-    name: lessons-bucket-ninjadev-${self:provider.stage}
+    name: lessons-bucket-dvhgv766dg-${self:provider.stage}
           
